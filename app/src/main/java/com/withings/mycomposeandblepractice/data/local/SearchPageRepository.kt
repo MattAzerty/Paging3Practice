@@ -38,4 +38,9 @@ class SearchPageRepository @Inject constructor(
         _currentPageFlow.value = PIXABAY_STARTING_PAGE_INDEX
     }
 
+    fun resetSelectedList() {
+        _selectedImages.value = emptyList()
+        _currentPageFlow.value = PIXABAY_STARTING_PAGE_INDEX
+    }
+
 }

@@ -1,14 +1,19 @@
 package com.withings.mycomposeandblepractice.ui.presentation.screens.search
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +33,8 @@ import com.withings.mycomposeandblepractice.ui.presentation.components.clickable
 import kotlinx.coroutines.flow.SharedFlow
 import androidx.compose.ui.res.stringResource
 import com.withings.mycomposeandblepractice.R
+import com.withings.mycomposeandblepractice.ui.theme.DefaultImageSize
+import com.withings.mycomposeandblepractice.ui.theme.DefaultPadding
 import kotlinx.coroutines.flow.Flow
 
 
@@ -42,6 +49,8 @@ fun SearchImageScreen(
 ) {
 
     val selectedImages = selectedImagesFlow.collectAsState(initial = emptyList())
+    val lazyListState = rememberLazyListState()
+
 
     val context = LocalContext.current
     LaunchedEffect(key1 = images.loadState) {
@@ -51,10 +60,13 @@ fun SearchImageScreen(
                 "Error: " + (images.loadState.refresh as LoadState.Error).error.message,
                 Toast.LENGTH_LONG
             ).show()
+        }else{
+            lazyListState.scrollToItem(1)//offset in case user want to select first pic
         }
     }
 
     val currentImages by rememberUpdatedState(images)
+
     LaunchedEffect(true) {
 
         searchImageEventSharedFlow.collect { event ->
@@ -64,7 +76,11 @@ fun SearchImageScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         if(images.loadState.refresh is LoadState.Loading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
@@ -72,10 +88,17 @@ fun SearchImageScreen(
         } else {
 
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                state = lazyListState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = DefaultPadding),
+                verticalArrangement = Arrangement.spacedBy(DefaultPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                item {Spacer(modifier = Modifier.height(DefaultImageSize))}
+
+
                 items(images) { image ->
                     if(image != null) {
                         ImageItem(
@@ -102,20 +125,12 @@ fun SearchImageScreen(
                 Button(
                     onClick = onNextButtonClicked,
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(DefaultPadding)
                         .align(Alignment.BottomEnd)
                 ) {
                     Text(text = stringResource(R.string.next))
                 }
             }
-
-            /*RoundCornerButtonText(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                text = "Next",
-                isButtonCanBeClicked = true,
-                onButtonClicked = onNextButtonClicked,
-            )*/
-
         }
     }
 }

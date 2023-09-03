@@ -11,7 +11,13 @@ import javax.inject.Inject
 class ShowCaseViewModel @Inject constructor(
 private val searchPageRepository: SearchPageRepository,
 ): ViewModel() {
-    fun getImageList(): Flow<List<ImageEntity>> {
+
+    fun getSelectedListFlow(): Flow<List<ImageEntity>> {
     return searchPageRepository.selectedImages
     }
+
+    fun onCloseButtonClicked() {
+    searchPageRepository.resetSelectedList()
+    }
+
 }

@@ -26,6 +26,10 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name = "pixabayApiKey"
+            android:value = "${PIXABAY_API_KEY}"/>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.withings.mycomposeandblepractice.androidx-startup"

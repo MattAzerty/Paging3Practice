@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -19,13 +20,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.withings.mycomposeandblepractice.R
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -40,22 +47,24 @@ fun SearchBar(
 
     TextField(
         value = text,
-        /*textStyle = TextStyle(
-            fontFamily = MyCodeFont,
+        textStyle = TextStyle(
             fontSize = 16.sp,
-        ),*/
+        ),
         onValueChange = { text = it },
-        label = { Text("Search") },
-        //leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+        label = { Text(stringResource(R.string.imageSearchHint)) },
         trailingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 16.dp),
         shape = RoundedCornerShape(20.dp),
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color.White.copy(alpha = 0.5f),
-            focusedLabelColor = Color.DarkGray,
-            cursorColor = Color.DarkGray,
+            textColor = MaterialTheme.colorScheme.background,
+            //unfocusedLabelColor = Color.White,
+            containerColor = if(text.isBlank()) Color.White.copy(alpha = 0.3f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+            focusedLabelColor = MaterialTheme.colorScheme.background,
+            cursorColor = MaterialTheme.colorScheme.primary,
+            unfocusedTrailingIconColor= Color.White,
+            focusedTrailingIconColor= MaterialTheme.colorScheme.background,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
         ),
@@ -66,7 +75,6 @@ fun SearchBar(
             keyboardController?.hide()
             //or hide keyboard
             focusManager.clearFocus()
-
         })
     )
 }

@@ -4,6 +4,8 @@ plugins {
     //HILT
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    //API secret local properties
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -111,6 +113,9 @@ dependencies {
 
     //COIL https://coil-kt.github.io/coil/compose/
     implementation "io.coil-kt:coil-compose:2.4.0"
+
+
+
 }
 
 // Allow references to generated code

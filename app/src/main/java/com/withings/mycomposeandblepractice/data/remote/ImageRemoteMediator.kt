@@ -5,6 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.withings.mycomposeandblepractice.BuildConfig
 import com.withings.mycomposeandblepractice.data.local.AppDatabase
 import com.withings.mycomposeandblepractice.data.local.SearchPageRepository
 import com.withings.mycomposeandblepractice.data.local.ImageEntity
@@ -43,6 +44,7 @@ class ImageRemoteMediator @Inject constructor(
             }
 
             val pixabayResponse = pixabayApi.getImages(
+                apiKey = BuildConfig.PIXABAY_API_KEY,
                 query = searchPageRepository.searchFlow.value,
                 page = loadKey,
                 pageCount = state.config.pageSize,

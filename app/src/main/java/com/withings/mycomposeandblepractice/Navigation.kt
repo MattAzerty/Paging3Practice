@@ -34,7 +34,15 @@ fun MyNavHost(
             )
         }
         composable(SHOW_ROUTE) {
-            ShowCaseRoute()
+            ShowCaseRoute(
+                onBackClicked = {
+                    navController.navigate(SEARCH_ROUTE){
+                        popUpTo("show") {
+                            // To remove back stack
+                            inclusive = true
+                        }
+                    } },
+            )
         }
     }
 }
