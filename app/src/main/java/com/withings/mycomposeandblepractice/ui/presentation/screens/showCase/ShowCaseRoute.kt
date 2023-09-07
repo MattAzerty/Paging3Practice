@@ -9,10 +9,15 @@ fun ShowCaseRoute(
 ) {
     val showCaseViewModel = hiltViewModel<ShowCaseViewModel>()
     ShowCaseScreen(
+        showCaseEventSharedFlow = showCaseViewModel.showCaseEventSharedFlow,
+        onNotificationPermissionResult= { showCaseViewModel.onNotificationPermissionResult(it) },
         imageListFlow = showCaseViewModel.getSelectedListFlow(),
         onCloseButtonClicked= {
             showCaseViewModel.onCloseButtonClicked()
             onBackClicked()
+        },
+        onDownloadButtonClicked = {
+            showCaseViewModel.onDownloadButtonClicked()
         }
     )
 }

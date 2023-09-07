@@ -7,6 +7,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.room.Room
 import androidx.work.WorkManager
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.withings.mycomposeandblepractice.data.local.AppDatabase
 import com.withings.mycomposeandblepractice.data.local.ImageEntity
 import com.withings.mycomposeandblepractice.data.local.SearchPageRepository
@@ -50,6 +52,10 @@ object AppModule {
     fun provideSearchPageRepository(): SearchPageRepository {
         return SearchPageRepository()
     }
+
+    @Singleton
+    @Provides
+    fun provideGson(): Gson = GsonBuilder().create()
 
     @Provides
     @Singleton

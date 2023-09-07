@@ -29,7 +29,9 @@ fun MyNavHost(
         composable(SEARCH_ROUTE) {
             SearchImageRoute(
                 onNextClicked = {
-                    navController.navigate(SHOW_ROUTE)
+                    navController.navigate(SHOW_ROUTE){
+
+                    }
                     }
             )
         }
@@ -37,7 +39,7 @@ fun MyNavHost(
             ShowCaseRoute(
                 onBackClicked = {
                     navController.navigate(SEARCH_ROUTE){
-                        popUpTo("show") {
+                        popUpTo("search") {
                             // To remove back stack
                             inclusive = true
                         }

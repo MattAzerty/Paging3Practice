@@ -1,7 +1,6 @@
 package com.withings.mycomposeandblepractice.data.local
 
 import com.withings.mycomposeandblepractice.utils.PIXABAY_STARTING_PAGE_INDEX
-import com.withings.mycomposeandblepractice.utils.printLog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -38,8 +37,9 @@ class SearchPageRepository @Inject constructor(
         _currentPageFlow.value = PIXABAY_STARTING_PAGE_INDEX
     }
 
-    fun resetSelectedList() {
+    fun resetSelection() {
         _selectedImages.value = emptyList()
+        _searchFlow.value =""
         _currentPageFlow.value = PIXABAY_STARTING_PAGE_INDEX
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.cachedIn
+import com.withings.mycomposeandblepractice.R
 import com.withings.mycomposeandblepractice.data.local.ImageEntity
 import com.withings.mycomposeandblepractice.data.local.SearchPageRepository
 import com.withings.mycomposeandblepractice.di.CoroutineDispatcherProvider
@@ -32,10 +33,17 @@ class SearchImageViewModel @Inject constructor(
 
 
     fun onSearchForImageClicked(fieldOfSearch: String) {
+
         searchPageRepository.setSearchFieldEntry(fieldOfSearch)
         viewModelScope.launch(coroutineDispatcherProvider.io) {
-            _searchImageEventMutableSharedFlow.emit(SearchImageEvent.RefreshList)
+
+            if(fieldOfSearch.isBlank()){
+            _searchImageEventMutableSharedFlow.emit(SearchImageEvent.ShowMessage(R.string.blank_search))
+        }else {
+                _searchImageEventMutableSharedFlow.emit(SearchImageEvent.RefreshList)
+            }
         }
+
         }
 
 

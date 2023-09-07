@@ -1,5 +1,6 @@
 package com.withings.mycomposeandblepractice.ui.presentation.components.clickables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,61 +21,89 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.withings.mycomposeandblepractice.R
+import com.withings.mycomposeandblepractice.ui.theme.DefaultTextSize
+import com.withings.mycomposeandblepractice.ui.theme.MyComposeAndBLEPracticeTheme
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    onSearch: (String) -> Unit
+    onSearch: (String) -> Unit,
+    focusManager: FocusManager
 ) {
     var text by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
+    val clearFocusSearchBar = {
+        // Hide the keyboard after submitting the search
+        keyboardController?.hide()
+        //and clear focus on the "view"
+        focusManager.clearFocus()
+    }
 
 
     TextField(
         value = text,
         textStyle = TextStyle(
-            fontSize = 16.sp,
+            fontSize = DefaultTextSize,
         ),
-        onValueChange = { text = it },
-        label = { Text(stringResource(R.string.imageSearchHint)) },
-        trailingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+        onValueChange = {
+            text = it
+        },
+        label = { Text(stringResource(R.string.image_search_hint)) },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = null,
+                modifier = Modifier
+                    .clickable {
+                        onSearch(text)
+                        clearFocusSearchBar()
+                    },
+            )
+        },
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 16.dp),
         shape = RoundedCornerShape(20.dp),
         colors = TextFieldDefaults.textFieldColors(
-            textColor = MaterialTheme.colorScheme.background,
-            //unfocusedLabelColor = Color.White,
-            containerColor = if(text.isBlank()) Color.White.copy(alpha = 0.3f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-            focusedLabelColor = MaterialTheme.colorScheme.background,
-            cursorColor = MaterialTheme.colorScheme.primary,
-            unfocusedTrailingIconColor= Color.White,
-            focusedTrailingIconColor= MaterialTheme.colorScheme.background,
+            textColor = MaterialTheme.colorScheme.onSurface,
+            containerColor = if (text.isBlank()) MaterialTheme.colorScheme.primary.copy(0.5f) else MaterialTheme.colorScheme.primary.copy(
+                alpha = 0.8f
+            ),
+            focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface.copy(0.5f),
+            cursorColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
+            focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = {
-            onSearch(text)
-            // Hide the keyboard after submitting the search
-            keyboardController?.hide()
-            //or hide keyboard
-            focusManager.clearFocus()
-        })
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                onSearch(text)
+                clearFocusSearchBar()
+            })
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SearchBarPreview() {
+    MyComposeAndBLEPracticeTheme {
+        SearchBar(
+            onSearch = {},
+            focusManager = LocalFocusManager.current
+        )
+    }
 }

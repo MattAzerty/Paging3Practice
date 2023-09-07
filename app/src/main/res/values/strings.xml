@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">MyComposeAndBLEPractice</string>
     <string name="next">NEXT</string>
-    <string name="imageSearchHint">Search</string>
+    <string name="image_search_hint">Search</string>
+    <string name="blank_search">Nothing to search</string>
+    <string name="download_button">DOWNLOAD</string>
+    <string name="download_complete">Download Complete</string>
+    <string name="tap_to_open_folder">Tap to open the download folder</string>
+    <string name="downloading_images">Downloading images…</string>
 </resources>
