@@ -46,21 +46,20 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import com.withings.mycomposeandblepractice.data.local.ImageEntity
-import androidx.paging.compose.items
-import com.withings.mycomposeandblepractice.ui.presentation.components.clickables.SearchBar
-import kotlinx.coroutines.flow.SharedFlow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.withings.mycomposeandblepractice.R
+import com.withings.mycomposeandblepractice.data.local.ImageEntity
 import com.withings.mycomposeandblepractice.ui.presentation.components.clickables.RoundButton
+import com.withings.mycomposeandblepractice.ui.presentation.components.clickables.SearchBar
 import com.withings.mycomposeandblepractice.ui.presentation.components.images.ImageItem
 import com.withings.mycomposeandblepractice.ui.theme.DefaultImageSize
 import com.withings.mycomposeandblepractice.ui.theme.DefaultItemPadding
@@ -68,6 +67,7 @@ import com.withings.mycomposeandblepractice.ui.theme.MyComposeAndBLEPracticeThem
 import com.withings.mycomposeandblepractice.utils.normalizedItemPosition
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlin.math.absoluteValue
 
 
@@ -125,165 +125,6 @@ fun SearchImageScreen(
         onNextButtonClicked = onNextButtonClicked,
         snackBarHostState = snackBarHostState
     )
-
-    /*Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        if (images.loadState.refresh is LoadState.Loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        } else {
-
-            Box(
-                modifier = Modifier
-                    .requiredHeight(heightInDp / 1.5f)
-                    .requiredWidth(heightInDp / 1.5f)
-                    .align(Alignment.Center)
-                    .offset(x = -widthInDp / 2)
-                    .graphicsLayer {
-                        clip = true
-                        shape = CircleShape
-                    }
-                    .background(
-                        Brush.radialGradient(
-                            listOf(
-                                MaterialTheme.colorScheme.secondary.copy(0.7f),
-                                MaterialTheme.colorScheme.background,
-                            ),
-                            radius = 1500f,
-                            center = Offset.Infinite
-                        )
-                    )
-                    .border(
-                        BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(0.1f)),
-                        shape = CircleShape,
-                    )
-            )
-
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(DefaultItemPadding),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-
-                item { Spacer(modifier = Modifier.height(DefaultImageSize)) }
-
-
-                items(images, key = { it.id }) { image ->
-                    if (image != null) {
-                        ImageItem(
-                            image = image,
-                            onImageClicked = {
-                                focusManager.clearFocus()
-                                onImageClicked(it)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .graphicsLayer {
-                                    val varPos =
-                                        (lazyListState.layoutInfo.normalizedItemPosition(
-                                            image.id
-                                        )).absoluteValue
-                                    scaleX =
-                                        1 - (varPos * 0.1F)//scale 0.9..1 btwn center on X
-                                    scaleY =
-                                        1 - (varPos * 0.1F)//scale 0.9..1 btwn center on X
-                                    translationX = -8.dp.toPx() +
-                                            ((widthInPx * 0.12F - DefaultItemPadding.toPx()) * varPos)//translation to right
-                                },
-                        )
-                    }
-                }
-                item {
-                    if (images.loadState.append is LoadState.Loading) {
-                        CircularProgressIndicator()
-                    }
-                }
-            }
-
-
-            SearchBar(
-                modifier = Modifier.padding(top = DefaultImageSize / 3f),
-                focusManager = focusManager,
-                onSearch = {
-                    onSearchForImageClicked(it)
-                }
-            )
-
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomEnd),
-                horizontalArrangement = Arrangement.Start,
-            ) {
-                Text(
-                    modifier = Modifier.padding(DefaultItemPadding),
-                    color = MaterialTheme.colorScheme.primary.copy(0.7f),
-                    text = images.itemCount.toString(),
-                    style = TextStyle(
-                        fontSize = 40.sp,
-                        shadow = Shadow(
-                            color = Color.Black.copy(0.3f),
-                            offset = Offset(7.0f, 4.0f),
-                            blurRadius = 0.5f
-                        )
-                    )
-                )
-            }
-
-
-            when {
-                selectedImages.value.size >= 2 -> {
-                    Button(
-                        onClick = onNextButtonClicked,
-                        modifier = Modifier
-                            .padding(DefaultItemPadding)
-                            .align(Alignment.BottomEnd)
-                    ) {
-                        Text(text = stringResource(R.string.next))
-                    }
-                }
-
-                images.itemCount == 1 -> {
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomEnd),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        RoundButton(
-                            onButtonClick = {},
-                            imageVector = Icons.Filled.Close,
-                        )
-                    }
-
-                }
-            }
-
-
-            SnackbarHost(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter),
-                hostState = snackBarHostState,
-                snackbar = {
-                    Snackbar(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        snackbarData = it
-                    )
-                }
-            )
-
-        }
-    }*/
 }
 
 @Composable
@@ -344,8 +185,11 @@ fun SearchImageContent(
 
                 item { Spacer(modifier = Modifier.height(DefaultImageSize)) }
 
-
-                items(images, key = { it.id }) { image ->
+                items(
+                    count = images.itemCount,
+                    key = images.itemKey { it.id },
+                ) { index ->
+                    val image = images[index]
                     if (image != null) {
                         ImageItem(
                             image = image,
@@ -369,7 +213,11 @@ fun SearchImageContent(
                                 },
                         )
                     }
+
                 }
+
+
+
                 item {
                     if (images.loadState.append is LoadState.Loading) {
                         CircularProgressIndicator()
