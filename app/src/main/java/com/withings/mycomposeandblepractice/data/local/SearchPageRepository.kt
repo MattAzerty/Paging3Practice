@@ -10,6 +10,9 @@ import javax.inject.Singleton
 class SearchPageRepository @Inject constructor(
 ) {
 
+    private val _isImagesLoading:MutableStateFlow<Boolean> = MutableStateFlow(true)
+    val isImagesLoading = _isImagesLoading.asStateFlow()
+
     private val _selectedImages = MutableStateFlow<List<ImageEntity>>(emptyList())
     val selectedImages = _selectedImages.asStateFlow()
 
@@ -41,6 +44,10 @@ class SearchPageRepository @Inject constructor(
         _selectedImages.value = emptyList()
         _searchFlow.value =""
         _currentPageFlow.value = PIXABAY_STARTING_PAGE_INDEX
+    }
+
+    fun setIsImageLoading(imageLoading: Boolean) {
+        _isImagesLoading.value = imageLoading
     }
 
 }

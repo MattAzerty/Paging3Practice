@@ -126,6 +126,9 @@ dependencies {
     //GSON
     implementation 'com.google.code.gson:gson:2.10.1'
 
+    // Splash API https://developer.android.com/develop/ui/views/launch/splash-screen
+    implementation 'androidx.core:core-splashscreen:1.0.1'
+
 }
 
 // Allow references to generated code

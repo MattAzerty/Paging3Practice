@@ -65,6 +65,7 @@ import com.withings.mycomposeandblepractice.ui.theme.DefaultImageSize
 import com.withings.mycomposeandblepractice.ui.theme.DefaultItemPadding
 import com.withings.mycomposeandblepractice.ui.theme.MyComposeAndBLEPracticeTheme
 import com.withings.mycomposeandblepractice.utils.normalizedItemPosition
+import com.withings.mycomposeandblepractice.utils.printLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -78,6 +79,7 @@ fun SearchImageScreen(
     onImageClicked: (ImageEntity) -> Unit,
     onNextButtonClicked: () -> Unit,
     images: LazyPagingItems<ImageEntity>,
+    setIsImagesLoading: (Boolean) -> Unit,
     selectedImagesFlow: Flow<List<ImageEntity>>
 ) {
 
@@ -94,7 +96,9 @@ fun SearchImageScreen(
         when (images.loadState.refresh) {
             is LoadState.Error -> snackBarHostState.showSnackbar("Error: " + (images.loadState.refresh as LoadState.Error).error.message)
             LoadState.Loading -> lazyListState.scrollToItem(1)//offset in case user want to select first pic}
-            is LoadState.NotLoading -> {}
+            is LoadState.NotLoading -> {
+                setIsImagesLoading(false)
+            }
         }
 
     }

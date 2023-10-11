@@ -62,4 +62,8 @@ class SearchImageViewModel @Inject constructor(
         return searchPageRepository.selectedImages
     }
 
+    fun setIsImageLoading(isImageLoading: Boolean) {
+        searchPageRepository.setIsImageLoading(isImageLoading)
+    }
+
 }

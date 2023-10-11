@@ -19,6 +19,7 @@ fun SearchImageRoute(
         },
         onNextButtonClicked = { searchImageViewModel.onNextButtonClicked() },
         images = searchImageViewModel.imagePagingFlow.collectAsLazyPagingItems(),
+        setIsImagesLoading = {searchImageViewModel.setIsImageLoading(it)},
         selectedImagesFlow = searchImageViewModel.getSelectedImages()
     )
 
