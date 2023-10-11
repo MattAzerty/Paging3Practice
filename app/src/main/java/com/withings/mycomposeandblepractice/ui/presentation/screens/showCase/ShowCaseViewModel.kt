@@ -6,6 +6,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.google.gson.Gson
+import com.withings.mycomposeandblepractice.Destinations
+import com.withings.mycomposeandblepractice.MyNavigator
 import com.withings.mycomposeandblepractice.R
 import com.withings.mycomposeandblepractice.data.local.DownloadPictureWorker
 import com.withings.mycomposeandblepractice.data.local.ImageEntity
@@ -27,6 +29,7 @@ class ShowCaseViewModel @Inject constructor(
     private val permissionChecker: PermissionChecker,
     private val gson: Gson,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    private val myNavigator: MyNavigator,
 ) : ViewModel() {
 
     private val _showCaseEventMutableSharedFlow = MutableSharedFlow<ShowCaseEvent>()
@@ -38,7 +41,13 @@ class ShowCaseViewModel @Inject constructor(
 
     fun onCloseButtonClicked() {
         searchPageRepository.resetSelection()
-    }
+        myNavigator.navigate(Destinations.SEARCH_ROUTE) {
+                popUpTo("search") {
+                    // To remove back stack
+                    inclusive = true
+                }
+             }
+        }
 
     fun onDownloadButtonClicked() {
         viewModelScope.launch(coroutineDispatcherProvider.io) {
@@ -51,7 +60,7 @@ class ShowCaseViewModel @Inject constructor(
                         .build()
                 )
                 //2 - quit showcase
-                _showCaseEventMutableSharedFlow.emit(ShowCaseEvent.ReturnToSearchScreen)
+                onCloseButtonClicked()
             } else {
                 _showCaseEventMutableSharedFlow.emit(ShowCaseEvent.AskNotificationPermission)
             }

@@ -80,7 +80,6 @@ fun ShowCaseScreen(
 
         showCaseEventSharedFlow.collect { event ->
             when (event) {
-                is ShowCaseEvent.ReturnToSearchScreen -> onCloseButtonClicked()
                 is ShowCaseEvent.AskNotificationPermission -> notificationPermissionState.launchPermissionRequest()
                 is ShowCaseEvent.ShowToastMessage -> Toast.makeText(
                     context,

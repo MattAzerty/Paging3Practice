@@ -5,7 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun ShowCaseRoute(
-    onBackClicked: () -> Unit,
+    //onBackClicked: () -> Unit,
 ) {
     val showCaseViewModel = hiltViewModel<ShowCaseViewModel>()
     ShowCaseScreen(
@@ -14,7 +14,6 @@ fun ShowCaseRoute(
         imageListFlow = showCaseViewModel.getSelectedListFlow(),
         onCloseButtonClicked= {
             showCaseViewModel.onCloseButtonClicked()
-            onBackClicked()
         },
         onDownloadButtonClicked = {
             showCaseViewModel.onDownloadButtonClicked()

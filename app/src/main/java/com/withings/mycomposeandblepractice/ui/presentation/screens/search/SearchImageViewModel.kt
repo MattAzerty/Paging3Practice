@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.cachedIn
+import com.withings.mycomposeandblepractice.Destinations
+import com.withings.mycomposeandblepractice.MyNavigator
 import com.withings.mycomposeandblepractice.R
 import com.withings.mycomposeandblepractice.data.local.ImageEntity
 import com.withings.mycomposeandblepractice.data.local.SearchPageRepository
@@ -20,8 +22,10 @@ class SearchImageViewModel @Inject constructor(
     pager: Pager<Int, ImageEntity>,
     private val searchPageRepository: SearchPageRepository,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
+    private val myNavigator: MyNavigator,
 
-): ViewModel() {
+    ): ViewModel() {
+
 
     private val _searchImageEventMutableSharedFlow = MutableSharedFlow<SearchImageEvent>()
     val searchImageEventSharedFlow = _searchImageEventMutableSharedFlow.asSharedFlow()
@@ -46,6 +50,9 @@ class SearchImageViewModel @Inject constructor(
 
         }
 
+    fun onNextButtonClicked(){
+        myNavigator.navigate(Destinations.SHOW_ROUTE)
+    }
 
     fun onImageClicked(imageEntity: ImageEntity) {
         searchPageRepository.addOrRemoveSelectedImage(imageEntity)

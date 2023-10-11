@@ -6,7 +6,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 
 @Composable
 fun SearchImageRoute(
-    onNextClicked: () -> Unit
 ) {
     val searchImageViewModel = hiltViewModel<SearchImageViewModel>()
 
@@ -18,7 +17,7 @@ fun SearchImageRoute(
         onImageClicked = { imageEntity ->
             searchImageViewModel.onImageClicked(imageEntity)
         },
-        onNextButtonClicked = onNextClicked,
+        onNextButtonClicked = { searchImageViewModel.onNextButtonClicked() },
         images = searchImageViewModel.imagePagingFlow.collectAsLazyPagingItems(),
         selectedImagesFlow = searchImageViewModel.getSelectedImages()
     )
