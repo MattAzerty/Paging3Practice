@@ -17,6 +17,9 @@ fun SearchImageRoute(
         onImageClicked = { imageEntity ->
             searchImageViewModel.onImageClicked(imageEntity)
         },
+        onImageLongClick = { imageEntity ->
+            searchImageViewModel.onImageLongClick(imageEntity)
+        },
         onNextButtonClicked = { searchImageViewModel.onNextButtonClicked() },
         images = searchImageViewModel.imagePagingFlow.collectAsLazyPagingItems(),
         setIsImagesLoading = {searchImageViewModel.setIsImageLoading(it)},

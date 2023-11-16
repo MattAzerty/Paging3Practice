@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,8 +24,7 @@ class SearchImageViewModel @Inject constructor(
     private val searchPageRepository: SearchPageRepository,
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider,
     private val myNavigator: MyNavigator,
-
-    ): ViewModel() {
+) : ViewModel() {
 
 
     private val _searchImageEventMutableSharedFlow = MutableSharedFlow<SearchImageEvent>()
@@ -41,21 +41,27 @@ class SearchImageViewModel @Inject constructor(
         searchPageRepository.setSearchFieldEntry(fieldOfSearch)
         viewModelScope.launch(coroutineDispatcherProvider.io) {
 
-            if(fieldOfSearch.isBlank()){
-            _searchImageEventMutableSharedFlow.emit(SearchImageEvent.ShowMessage(R.string.blank_search))
-        }else {
+            if (fieldOfSearch.isBlank()) {
+                _searchImageEventMutableSharedFlow.emit(SearchImageEvent.ShowMessage(R.string.blank_search))
+            } else {
                 _searchImageEventMutableSharedFlow.emit(SearchImageEvent.RefreshList)
             }
         }
 
-        }
+    }
 
-    fun onNextButtonClicked(){
+    fun onNextButtonClicked() {
         myNavigator.navigate(Destinations.SHOW_ROUTE)
     }
 
     fun onImageClicked(imageEntity: ImageEntity) {
         searchPageRepository.addOrRemoveSelectedImage(imageEntity)
+    }
+
+    fun onImageLongClick(imageEntity: ImageEntity) {
+        val encodedPath = URLEncoder.encode(imageEntity.webformatURL, "UTF-8")
+        myNavigator.navigate("parallax/$encodedPath")
+        //myNavigator.navigate(Destinations.PARALLAX_ROUTE)
     }
 
     fun getSelectedImages(): Flow<List<ImageEntity>> {

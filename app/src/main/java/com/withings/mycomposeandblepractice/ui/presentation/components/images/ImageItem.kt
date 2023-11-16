@@ -1,6 +1,8 @@
 package com.withings.mycomposeandblepractice.ui.presentation.components.images
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Card
@@ -24,10 +26,12 @@ import com.withings.mycomposeandblepractice.ui.theme.DefaultElevation
 import com.withings.mycomposeandblepractice.ui.theme.DefaultImageSize
 import com.withings.mycomposeandblepractice.ui.theme.MyComposeAndBLEPracticeTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageItem(
     image: ImageEntity,
     onImageClicked: (ImageEntity) -> Unit,
+    onImageLongClick: (ImageEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -36,10 +40,15 @@ fun ImageItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable {
-                isSelected = !isSelected
-                onImageClicked(image)
-            }
+            .combinedClickable(
+                onClick = {
+                    isSelected = !isSelected
+                    onImageClicked(image)
+                },
+                onLongClick = {
+                    onImageLongClick(image)
+                }
+            )
             .focusRequester(FocusRequester()),
         elevation = CardDefaults.cardElevation(
             defaultElevation = DefaultElevation
@@ -70,6 +79,7 @@ fun ImageItemPreview() {
                 webformatURL = ""
             ),
             onImageClicked = {},
+            onImageLongClick = {}
         )
     }
 }

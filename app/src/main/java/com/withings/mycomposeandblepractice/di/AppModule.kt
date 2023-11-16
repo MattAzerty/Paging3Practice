@@ -2,6 +2,8 @@ package com.withings.mycomposeandblepractice.di
 
 import android.app.Application
 import android.content.Context
+import android.hardware.SensorManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -52,6 +54,12 @@ object AppModule {
     fun provideSearchPageRepository(): SearchPageRepository {
         return SearchPageRepository()
     }
+
+    /*@Singleton
+    @Provides
+    fun provideSensorManager(@ApplicationContext context: Context): SensorManager {
+        return context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }*/
 
     @Singleton
     @Provides

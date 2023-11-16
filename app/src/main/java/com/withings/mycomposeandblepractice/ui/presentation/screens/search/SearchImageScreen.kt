@@ -60,12 +60,12 @@ import com.withings.mycomposeandblepractice.R
 import com.withings.mycomposeandblepractice.data.local.ImageEntity
 import com.withings.mycomposeandblepractice.ui.presentation.components.clickables.RoundButton
 import com.withings.mycomposeandblepractice.ui.presentation.components.clickables.SearchBar
+import com.withings.mycomposeandblepractice.ui.presentation.components.decorations.RoundBackgroundGradientForBox
 import com.withings.mycomposeandblepractice.ui.presentation.components.images.ImageItem
 import com.withings.mycomposeandblepractice.ui.theme.DefaultImageSize
 import com.withings.mycomposeandblepractice.ui.theme.DefaultItemPadding
 import com.withings.mycomposeandblepractice.ui.theme.MyComposeAndBLEPracticeTheme
 import com.withings.mycomposeandblepractice.utils.normalizedItemPosition
-import com.withings.mycomposeandblepractice.utils.printLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -77,6 +77,7 @@ fun SearchImageScreen(
     searchImageEventSharedFlow: SharedFlow<SearchImageEvent>,
     onSearchForImageClicked: (fieldOfSearch: String) -> Unit,
     onImageClicked: (ImageEntity) -> Unit,
+    onImageLongClick: (ImageEntity) -> Unit,
     onNextButtonClicked: () -> Unit,
     images: LazyPagingItems<ImageEntity>,
     setIsImagesLoading: (Boolean) -> Unit,
@@ -124,6 +125,7 @@ fun SearchImageScreen(
         images = images,
         lazyListState = lazyListState,
         onImageClicked = onImageClicked,
+        onImageLongClick = onImageLongClick,
         onSearchForImageClicked = onSearchForImageClicked,
         selectedImagesFlow = selectedImagesFlow,
         onNextButtonClicked = onNextButtonClicked,
@@ -136,6 +138,7 @@ fun SearchImageContent(
     images: LazyPagingItems<ImageEntity>,
     lazyListState: LazyListState,
     onImageClicked: (ImageEntity) -> Unit,
+    onImageLongClick: (ImageEntity) -> Unit,
     onSearchForImageClicked: (fieldOfSearch: String) -> Unit,
     selectedImagesFlow: Flow<List<ImageEntity>>,
     onNextButtonClicked: () -> Unit,
@@ -200,6 +203,10 @@ fun SearchImageContent(
                             onImageClicked = {
                                 focusManager.clearFocus()
                                 onImageClicked(it)
+                            },
+                            onImageLongClick = {
+                                focusManager.clearFocus()
+                                onImageLongClick(it)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -294,30 +301,6 @@ fun SearchImageContent(
 
 }
 
-@Composable
-fun RoundBackgroundGradientForBox(
-    modifier: Modifier = Modifier
-){
-
-    Box(
-        modifier = modifier
-            .background(
-                Brush.radialGradient(
-                    listOf(
-                        MaterialTheme.colorScheme.secondary.copy(0.7f),
-                        MaterialTheme.colorScheme.background,
-                    ),
-                    radius = 1500f,
-                    center = Offset.Infinite
-                )
-            )
-            .border(
-                BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(0.1f)),
-                shape = CircleShape,
-            )
-    )
-
-}
 
 @Composable
 fun ItemPagerCountIndicator(
@@ -387,6 +370,7 @@ fun SearchImageScreenPreview() {
         SearchImageContent(
             fakeDataFlow.collectAsLazyPagingItems(),
             rememberLazyListState(),
+            {},
             {},
             {},
             MutableStateFlow(fakeData),
